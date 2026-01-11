@@ -8,6 +8,19 @@
 </head>
 <body>
 
+  <!-- 21+ Age Gate -->
+  <div class="age-gate" id="ageGate" aria-hidden="true">
+    <div class="age-card" role="dialog" aria-modal="true" aria-label="Age verification">
+      <h2>Age Verification</h2>
+      <p>You must be 21+ to enter this site.</p>
+      <div class="age-actions">
+        <button class="btn" id="ageYes" type="button">I am 21 or older</button>
+        <button class="btn btn-ghost" id="ageNo" type="button">I am under 21</button>
+      </div>
+      <small class="age-note">By entering, you confirm you meet the age requirement.</small>
+    </div>
+  </div>
+
   <!-- Cart Sidebar -->
   <aside class="cart" aria-label="Cart">
     <div class="cart-inner">
@@ -23,29 +36,39 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
 
-        <button class="checkout-btn" id="checkoutBtn" type="button">
+        <!-- Put your PayPal checkout link in script.js -->
+        <a class="checkout-btn" id="paypalCheckout" href="#" target="_blank" rel="noopener">
           Checkout via PayPal
-        </button>
+        </a>
       </div>
     </div>
   </aside>
 
-  <!-- Main Page -->
+  <!-- Main -->
   <main class="page">
-    <!-- Background hero with logo image -->
-    <section class="hero" aria-label="Hero">
-      <div class="hero-overlay">
-        <h1 class="title">GG Myco - Page 1</h1>
-        <p class="subtitle">Premium products. Shipping is professional and discreet.</p>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-title">GG Myco</span>
+        <span class="brand-sub">Premium products. Shipping is professional and discreet.</span>
       </div>
-    </section>
 
-    <!-- Products -->
+      <nav class="nav">
+        <a class="nav-link active" href="index.html">Page 1</a>
+        <a class="nav-link" href="page2.html">Page 2</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="Hero background"></section>
+
     <section class="products-wrap" aria-label="Products">
       <div class="products" id="products"></div>
     </section>
   </main>
 
+  <script>
+    // tells script.js which page products to load
+    window.GG_PAGE = 1;
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
