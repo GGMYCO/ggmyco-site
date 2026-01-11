@@ -280,4 +280,17 @@ body.locked{
   .products, .page2-grid{ grid-template-columns: 1fr; }
 }
 
+/* ===== FORCE PAGE SWITCHER TO BOTTOM ===== */
+.page-switcher{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  margin-top: 40px;
+  padding: 20px 0 30px;
+
+  background: #000;
+  position: relative;   /* prevents topbar behavior */
+  z-index: 1;
+}
 
