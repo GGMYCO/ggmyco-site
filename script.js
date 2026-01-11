@@ -1,8 +1,7 @@
-// ✅ Put your PayPal checkout link here (PayPal.me, hosted button link, etc.)
+// Put your PayPal link here:
 const PAYPAL_CHECKOUT_URL = "PASTE_YOUR_PAYPAL_LINK_HERE";
 
-// Page 1 = 4 products, Page 2 = 5 products.
-// Edit names/prices however you want:
+// Products
 const PRODUCTS_PAGE_1 = [
   { id: "p1-1", name: "Product 1", price: 25.00 },
   { id: "p1-2", name: "Product 2", price: 30.00 },
@@ -18,48 +17,39 @@ const PRODUCTS_PAGE_2 = [
   { id: "p2-5", name: "Product 5", price: 12.00 },
 ];
 
-// ---------- helpers ----------
 function money(n){ return `$${n.toFixed(2)}`; }
 
-// ---------- age gate ----------
+/* ============ AGE GATE (MUST CLICK YES) ============ */
 function setupAgeGate(){
   const gate = document.getElementById("ageGate");
   const yes = document.getElementById("ageYes");
   const no = document.getElementById("ageNo");
 
-  const isVerified = localStorage.getItem("gg_age_verified") === "true";
-  if(!isVerified){
-    gate.classList.add("show");
-    gate.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
+  // Always show every visit (remove localStorage if you want it to remember)
+  gate.classList.add("show");
+  gate.setAttribute("aria-hidden", "false");
+  document.body.classList.add("locked");
 
   yes?.addEventListener("click", () => {
-    localStorage.setItem("gg_age_verified", "true");
     gate.classList.remove("show");
     gate.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
+    document.body.classList.remove("locked");
   });
 
+  // NO should NOT allow access
   no?.addEventListener("click", () => {
-    // If under 21, block access
-    document.body.innerHTML = `
-      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#000;color:#fff;padding:18px;text-align:center;">
-        <div style="max-width:520px;">
-          <h1 style="margin:0 0 10px;">Access Denied</h1>
-          <p style="margin:0;opacity:0.85;">You must be 21+ to access this website.</p>
-        </div>
-      </div>
-    `;
+    alert("You must be 21+ to access this site.");
   });
 }
 
-// ---------- cart ----------
-const CART_KEY = "gg_cart_v1"; // persists across page 1 and 2
+/* ============ CART (PERSISTS BETWEEN PAGES) ============ */
+const CART_KEY = "gg_cart_v1";
+
 function loadCart(){
   try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
   catch { return {}; }
 }
+
 function saveCart(cart){
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
@@ -125,11 +115,10 @@ function renderCart(){
   cartTotalEl.textContent = money(total);
 }
 
-// ---------- products ----------
+/* ============ PRODUCTS ============ */
 function renderProducts(){
   const productsEl = document.getElementById("products");
   const page = window.GG_PAGE || 1;
-
   const list = page === 2 ? PRODUCTS_PAGE_2 : PRODUCTS_PAGE_1;
 
   productsEl.innerHTML = "";
@@ -146,7 +135,7 @@ function renderProducts(){
   });
 }
 
-// ---------- checkout link ----------
+/* ============ PAYPAL LINK ============ */
 function setupPayPal(){
   const link = document.getElementById("paypalCheckout");
   if(!link) return;
@@ -157,14 +146,12 @@ function setupPayPal(){
     link.href = "#";
     link.addEventListener("click", (e) => {
       e.preventDefault();
-      alert("Paste your PayPal checkout link into script.js (PAYPAL_CHECKOUT_URL).");
+      alert("Paste your PayPal link into script.js (PAYPAL_CHECKOUT_URL).");
     });
   }
 }
 
-// init
 setupAgeGate();
 setupPayPal();
 renderProducts();
 renderCart();
-
