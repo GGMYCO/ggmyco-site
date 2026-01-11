@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GG Myco - Page 1</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Cart Sidebar -->
+  <aside class="cart" aria-label="Cart">
+    <div class="cart-inner">
+      <h2>Cart</h2>
+
+      <div class="cart-items" id="cartItems">
+        <p class="muted">No items yet.</p>
+      </div>
+
+      <div class="cart-footer">
+        <div class="total-row">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn" type="button">
+          Checkout via PayPal
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Page -->
+  <main class="page">
+    <!-- Background hero with logo image -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-overlay">
+        <h1 class="title">GG Myco - Page 1</h1>
+        <p class="subtitle">Premium products. Shipping is professional and discreet.</p>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products-wrap" aria-label="Products">
+      <div class="products" id="products"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
