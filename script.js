@@ -19,24 +19,36 @@ const PRODUCTS_PAGE_2 = [
 
 function money(n){ return `$${n.toFixed(2)}`; }
 
-/* ============ AGE GATE (MUST CLICK YES) ============ */
+/* ============ AGE GATE (ONLY ONCE) ============ */
 function setupAgeGate(){
   const gate = document.getElementById("ageGate");
   const yes = document.getElementById("ageYes");
   const no = document.getElementById("ageNo");
 
-  // Always show every visit (remove localStorage if you want it to remember)
-  gate.classList.add("show");
+  // If the page doesn't have the gate (or you removed it), do nothing
+  if(!gate) return;
+
+  // ✅ If already accepted once, remove the popup and allow access
+  const accepted = localStorage.getItem("gg_age_21_accepted") === "true";
+  if(accepted){
+    gate.remove();
+    document.body.classList.remove("locked");
+    return;
+  }
+
+  // ✅ Show the popup (blocks site)
+  gate.style.display = "flex";
   gate.setAttribute("aria-hidden", "false");
   document.body.classList.add("locked");
 
+  // YES = save acceptance + close forever
   yes?.addEventListener("click", () => {
-    gate.classList.remove("show");
-    gate.setAttribute("aria-hidden", "true");
+    localStorage.setItem("gg_age_21_accepted", "true");
+    gate.remove();
     document.body.classList.remove("locked");
   });
 
-  // NO should NOT allow access
+  // NO = do NOT allow access
   no?.addEventListener("click", () => {
     alert("You must be 21+ to access this site.");
   });
@@ -155,3 +167,4 @@ setupAgeGate();
 setupPayPal();
 renderProducts();
 renderCart();
+
