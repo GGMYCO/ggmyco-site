@@ -170,15 +170,17 @@ body{
   background:
     radial-gradient(
       ellipse at center,
-      rgba(0,0,0,0.15) 0%,
-      rgba(0,0,0,0.45) 60%,
-      rgba(0,0,0,0.95) 100%
+      rgba(0,0,0,0.05) 0%,
+      rgba(0,0,0,0.20) 55%,
+      rgba(0,0,0,0.70) 100%
     ),
     url("logo-bg.png");
-  background-position: center 25%;
   background-repeat: no-repeat;
-  background-size: cover;
   background-color: #000;
+
+  /* ✅ make logo smaller + less cropped */
+  background-size: 120%;     /* try 110% if still too big */
+  background-position: center 15%; /* move up so chest isn't in the dark fade */
 }
 
 
