@@ -8,16 +8,18 @@
 </head>
 <body>
 
-  <!-- 21+ Age Gate -->
+  <!-- 21+ Age Gate (Blocks site until YES) -->
   <div class="age-gate" id="ageGate" aria-hidden="true">
     <div class="age-card" role="dialog" aria-modal="true" aria-label="Age verification">
-      <h2>Age Verification</h2>
-      <p>You must be 21+ to enter this site.</p>
+      <h2>21+ Only</h2>
+      <p>You must be 21 or older to enter this site.</p>
+
       <div class="age-actions">
-        <button class="btn" id="ageYes" type="button">I am 21 or older</button>
-        <button class="btn btn-ghost" id="ageNo" type="button">I am under 21</button>
+        <button class="btn" id="ageYes" type="button">Yes, I am 21+</button>
+        <button class="btn btn-ghost" id="ageNo" type="button">No</button>
       </div>
-      <small class="age-note">By entering, you confirm you meet the age requirement.</small>
+
+      <small class="age-note">Click “Yes” to continue.</small>
     </div>
   </div>
 
@@ -36,7 +38,6 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
 
-        <!-- Put your PayPal checkout link in script.js -->
         <a class="checkout-btn" id="paypalCheckout" href="#" target="_blank" rel="noopener">
           Checkout via PayPal
         </a>
@@ -49,7 +50,7 @@
     <header class="topbar">
       <div class="brand">
         <span class="brand-title">GG Myco</span>
-        <span class="brand-sub">Premium products. Shipping is professional and discreet.</span>
+        <span class="brand-sub">Page 1</span>
       </div>
 
       <nav class="nav">
@@ -58,17 +59,16 @@
       </nav>
     </header>
 
-    <section class="hero" aria-label="Hero background"></section>
+    <!-- Full background logo area -->
+    <section class="hero" aria-label="Logo background"></section>
 
+    <!-- Products -->
     <section class="products-wrap" aria-label="Products">
       <div class="products" id="products"></div>
     </section>
   </main>
 
-  <script>
-    // tells script.js which page products to load
-    window.GG_PAGE = 1;
-  </script>
+  <script>window.GG_PAGE = 1;</script>
   <script src="script.js"></script>
 </body>
 </html>
