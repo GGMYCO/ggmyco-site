@@ -162,18 +162,20 @@ body{
 }
 
 .hero{
-  height: 78vh; /* taller so logo fits */
+  height: 78vh;
   background:
     radial-gradient(ellipse at center,
-      rgba(0,0,0,0.20) 0%,
+      rgba(0,0,0,0.05) 0%,
       rgba(0,0,0,0.45) 55%,
-      rgba(0,0,0,0.75) 100%
+      rgba(0,0,0,0.90) 100%
     ),
     url("logo-bg.png");
-  background-position: center;
+  background-position: center 30%;
   background-repeat: no-repeat;
-  background-size: contain; /* 🔥 THIS FIXES THE CUTOFF */
+  background-size: cover;   /* 🔥 fills the hero */
+  background-color: #000;   /* 🔥 matches black outside image */
 }
+
 
 
 /* ---- Products grid ---- */
