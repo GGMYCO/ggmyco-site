@@ -1,21 +1,62 @@
 :root{
-  --bg: #0b0b10;
-  --card: rgba(255,255,255,0.92);
+  --bg: #07070c;
+  --card: rgba(255,255,255,0.95);
   --text: #111;
-  --muted: rgba(255,255,255,0.75);
+  --muted: rgba(255,255,255,0.80);
   --purple: #6a00ff;
-  --purple-dark: #4d00c9;
-  --blue: #1a73e8;
+  --purple2: #4d00c9;
+  --btnBlue: #1a73e8;
 }
 
-*{ box-sizing: border-box; }
+*{ box-sizing:border-box; }
 html,body{ height:100%; }
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: white;
-  overflow-x: hidden;
+}
+
+/* ---- Age Gate ---- */
+.age-gate{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 18px;
+}
+.age-gate.show{ display:flex; }
+
+.age-card{
+  width: min(520px, 100%);
+  background: #11111b;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+  text-align: center;
+}
+.age-card h2{ margin: 0 0 8px; }
+.age-card p{ margin: 0 0 14px; opacity: 0.9; }
+.age-actions{ display:flex; gap:10px; justify-content:center; flex-wrap: wrap; }
+.age-note{ display:block; margin-top: 10px; opacity: 0.75; }
+
+.btn{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 0;
+  background: var(--purple);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn:hover{ filter: brightness(1.05); }
+.btn-ghost{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
 }
 
 /* ---- Cart Sidebar ---- */
@@ -25,8 +66,8 @@ body{
   right: 0;
   width: 320px;
   height: 100vh;
-  background: linear-gradient(180deg, #7b22ff 0%, #5b00ff 100%);
-  border-left: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(180deg, #7b22ff 0%, #4c00c9 100%);
+  border-left: 1px solid rgba(255,255,255,0.18);
   z-index: 50;
 }
 
@@ -38,10 +79,7 @@ body{
   gap: 12px;
 }
 
-.cart h2{
-  margin: 0;
-  font-size: 20px;
-}
+.cart h2{ margin:0; font-size: 20px; }
 
 .cart-items{
   flex: 1;
@@ -63,10 +101,7 @@ body{
   gap: 10px;
 }
 
-.cart-item small{
-  display:block;
-  opacity: 0.9;
-}
+.cart-item small{ display:block; opacity: 0.9; }
 
 .cart-footer{
   padding-top: 10px;
@@ -81,70 +116,79 @@ body{
 }
 
 .checkout-btn{
+  display: block;
+  text-align: center;
   width: 100%;
   padding: 10px 12px;
-  border: 0;
   border-radius: 10px;
   background: #1b2bff;
   color: white;
-  font-weight: 700;
-  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
 }
-.checkout-btn:hover{
-  filter: brightness(1.05);
-}
+.checkout-btn:hover{ filter: brightness(1.05); }
 
-/* ---- Main layout leaves room for cart ---- */
+.muted{ opacity: 0.85; }
+
+/* ---- Main layout ---- */
 .page{
-  margin-right: 320px; /* same as cart width */
+  margin-right: 320px; /* space for cart */
   min-height: 100vh;
 }
 
-/* ---- Hero background image ---- */
+/* Topbar */
+.topbar{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  gap: 12px;
+}
+.brand{ display:flex; flex-direction: column; }
+.brand-title{ font-weight: 900; letter-spacing: 0.4px; }
+.brand-sub{ font-size: 12px; opacity: 0.75; }
+
+.nav{ display:flex; gap: 10px; }
+.nav-link{
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.nav-link.active{
+  background: rgba(255,255,255,0.10);
+  color: white;
+}
+
+/* ---- Hero background image (logo) ---- */
 .hero{
-  min-height: 70vh;
+  height: 68vh;
   background:
     radial-gradient(ellipse at center, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.70) 55%, rgba(0,0,0,0.92) 100%),
     url("assets/logo-bg.png");
-  background-size: cover;
   background-position: center;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding: 18px 14px 80px;
+  background-repeat: no-repeat;
+  /* Make logo BIGGER: increase this % */
+  background-size: 135%;
 }
 
-.hero-overlay{
-  text-align: center;
-  max-width: 700px;
-  padding: 10px 12px;
-}
-
-.title{
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  opacity: 0.95;
-}
-
-.subtitle{
-  margin: 6px 0 0;
-  font-size: 12px;
-  opacity: 0.80;
-}
-
-/* ---- Products on top of hero (bottom area) ---- */
+/* ---- Products grid ---- */
 .products-wrap{
-  margin-top: -65px; /* pulls cards upward over the hero like your screenshot */
+  margin-top: -78px;  /* pulls boxes up under the logo like your screenshot */
   padding: 0 14px 28px;
 }
 
 .products{
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  grid-template-columns: repeat(4, minmax(160px, 1fr)); /* Page 1 = 4 across */
   gap: 14px;
-  max-width: 950px;
+  max-width: 980px;
   margin: 0 auto;
+}
+
+.page2-grid{
+  grid-template-columns: repeat(5, minmax(150px, 1fr)); /* Page 2 = 5 across */
 }
 
 .product{
@@ -157,45 +201,44 @@ body{
   text-align: center;
 }
 
-.product h3{
-  margin: 0;
-  font-size: 14px;
-}
-
-.product .price{
-  margin: 6px 0 10px;
-  font-size: 12px;
-  opacity: 0.85;
-}
+.product h3{ margin:0; font-size: 14px; }
+.product .price{ margin: 6px 0 10px; font-size: 12px; opacity: 0.85; }
 
 .add-btn{
   width: 100%;
   padding: 8px 10px;
   border: 0;
   border-radius: 8px;
-  background: var(--blue);
+  background: var(--btnBlue);
   color: white;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
 }
 .add-btn:hover{ filter: brightness(1.05); }
 
-.muted{ opacity: 0.85; }
+.remove-btn{
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: white;
+  color: #111;
+  border: 1px solid rgba(0,0,0,0.12);
+  cursor: pointer;
+}
 
-/* ---- Responsive ---- */
+/* Responsive */
+@media (max-width: 1100px){
+  .page2-grid{ grid-template-columns: repeat(3, minmax(160px, 1fr)); }
+}
 @media (max-width: 980px){
   .products{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
 }
-
 @media (max-width: 760px){
-  .cart{
-    position: static;
-    width: 100%;
-    height: auto;
-    border-left: none;
-  }
+  .cart{ position: static; width: 100%; height: auto; border-left: none; }
   .page{ margin-right: 0; }
-  .hero{ min-height: 55vh; padding-bottom: 60px; }
-  .products-wrap{ margin-top: -45px; }
+  .hero{ height: 55vh; background-size: 160%; }
   .products{ grid-template-columns: 1fr; }
+  .page2-grid{ grid-template-columns: 1fr; }
 }
+
