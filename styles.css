@@ -166,7 +166,7 @@ body{
   height: 68vh;
   background:
     radial-gradient(ellipse at center, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.70) 55%, rgba(0,0,0,0.92) 100%),
-    url("assets/logo-bg.png");
+    url("logo-bg.png");
   background-position: center;
   background-repeat: no-repeat;
   /* Make logo BIGGER: increase this % */
