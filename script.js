@@ -1,4 +1,6 @@
-// Products
+/********************
+ * PRODUCTS
+ ********************/
 const PRODUCTS_PAGE_1 = [
   { id: "p1-1", name: "Product 1", price: 25.00 },
   { id: "p1-2", name: "Product 2", price: 30.00 },
@@ -16,7 +18,13 @@ const PRODUCTS_PAGE_2 = [
 
 function money(n){ return `$${n.toFixed(2)}`; }
 
-/* ============ AGE GATE (ONLY ONCE) ============ */
+function getAllProducts(){
+  return [...PRODUCTS_PAGE_1, ...PRODUCTS_PAGE_2];
+}
+
+/********************
+ * AGE GATE (ONLY ONCE)
+ ********************/
 function setupAgeGate(){
   const gate = document.getElementById("ageGate");
   const yes = document.getElementById("ageYes");
@@ -46,7 +54,9 @@ function setupAgeGate(){
   });
 }
 
-/* ============ CART (PERSISTS BETWEEN PAGES) ============ */
+/********************
+ * CART (PERSISTS BETWEEN PAGES)
+ ********************/
 const CART_KEY = "gg_cart_v1";
 
 function loadCart(){
@@ -56,10 +66,6 @@ function loadCart(){
 
 function saveCart(cart){
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
-}
-
-function getAllProducts(){
-  return [...PRODUCTS_PAGE_1, ...PRODUCTS_PAGE_2];
 }
 
 function cartTotalNumber(){
@@ -76,7 +82,7 @@ function cartTotalNumber(){
 }
 
 function cartTotalValueString(){
-  return cartTotalNumber().toFixed(2); // PayPal wants "12.34"
+  return cartTotalNumber().toFixed(2);
 }
 
 function addToCart(productId){
@@ -84,7 +90,6 @@ function addToCart(productId){
   cart[productId] = (cart[productId] || 0) + 1;
   saveCart(cart);
   renderCart();
-  renderPayPalButtons(); // keep PayPal buttons in sync with current total
 }
 
 function removeOne(productId){
@@ -96,7 +101,6 @@ function removeOne(productId){
 
   saveCart(cart);
   renderCart();
-  renderPayPalButtons();
 }
 
 function renderCart(){
@@ -141,7 +145,9 @@ function renderCart(){
   cartTotalEl.textContent = money(total);
 }
 
-/* ============ PRODUCTS ============ */
+/********************
+ * PRODUCTS RENDER
+ ********************/
 function renderProducts(){
   const productsEl = document.getElementById("products");
   const page = window.GG_PAGE || 1;
@@ -161,29 +167,35 @@ function renderProducts(){
   });
 }
 
-/* ============ PAYPAL SMART BUTTONS ============ */
+/********************
+ * PAYPAL SMART BUTTONS (RENDER ONCE)
+ ********************/
 function renderPayPalButtons(){
   const container = document.getElementById("paypal-buttons");
   if(!container) return;
 
-  // If PayPal SDK didn't load, show a helpful message
   if(typeof paypal === "undefined" || !paypal.Buttons){
     container.innerHTML = `<p class="muted">PayPal not loaded. Check your Client ID script line.</p>`;
     return;
   }
 
-  // Clear container before rendering (important when cart changes)
-  container.innerHTML = "";
+  // ✅ Render only once (prevents the spinner/disappearing bug)
+  if(container.dataset.rendered === "true") return;
+  container.dataset.rendered = "true";
 
   paypal.Buttons({
     createOrder: function(data, actions){
       const total = cartTotalValueString();
+
       if(total === "0.00"){
         alert("Your cart is empty.");
-        return;
+        return actions.reject();
       }
 
       return actions.order.create({
+        application_context: {
+          shipping_preference: "GET_FROM_FILE" // ✅ collect shipping address
+        },
         purchase_units: [{
           amount: { value: total }
         }]
@@ -192,23 +204,30 @@ function renderPayPalButtons(){
 
     onApprove: function(data, actions){
       return actions.order.capture().then(function(details){
+        console.log("CAPTURE DETAILS:", details);
+        console.log("SHIPPING:", details?.purchase_units?.[0]?.shipping);
+
         alert("Payment complete. Thanks!");
 
-        // Clear cart after successful payment
         localStorage.removeItem(CART_KEY);
         renderCart();
-        renderPayPalButtons();
       });
     },
 
+    onCancel: function(data){
+      console.log("PAYPAL CANCELLED:", data);
+    },
+
     onError: function(err){
-      console.error(err);
+      console.error("PAYPAL ERROR:", err);
       alert("PayPal error. Please try again.");
     }
   }).render("#paypal-buttons");
 }
 
-/* ============ INIT ============ */
+/********************
+ * INIT
+ ********************/
 setupAgeGate();
 renderProducts();
 renderCart();
