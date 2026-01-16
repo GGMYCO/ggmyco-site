@@ -1,6 +1,3 @@
-// Put your PayPal link here:
-const PAYPAL_CHECKOUT_URL = "PASTE_YOUR_PAYPAL_LINK_HERE";
-
 // Products
 const PRODUCTS_PAGE_1 = [
   { id: "p1-1", name: "Product 1", price: 25.00 },
@@ -25,10 +22,8 @@ function setupAgeGate(){
   const yes = document.getElementById("ageYes");
   const no = document.getElementById("ageNo");
 
-  // If the page doesn't have the gate (or you removed it), do nothing
   if(!gate) return;
 
-  // ✅ If already accepted once, remove the popup and allow access
   const accepted = localStorage.getItem("gg_age_21_accepted") === "true";
   if(accepted){
     gate.remove();
@@ -36,19 +31,16 @@ function setupAgeGate(){
     return;
   }
 
-  // ✅ Show the popup (blocks site)
   gate.style.display = "flex";
   gate.setAttribute("aria-hidden", "false");
   document.body.classList.add("locked");
 
-  // YES = save acceptance + close forever
   yes?.addEventListener("click", () => {
     localStorage.setItem("gg_age_21_accepted", "true");
     gate.remove();
     document.body.classList.remove("locked");
   });
 
-  // NO = do NOT allow access
   no?.addEventListener("click", () => {
     alert("You must be 21+ to access this site.");
   });
@@ -70,20 +62,41 @@ function getAllProducts(){
   return [...PRODUCTS_PAGE_1, ...PRODUCTS_PAGE_2];
 }
 
+function cartTotalNumber(){
+  const all = getAllProducts();
+  const cart = loadCart();
+  let total = 0;
+
+  for(const id of Object.keys(cart)){
+    const qty = cart[id];
+    const product = all.find(p => p.id === id);
+    if(product) total += product.price * qty;
+  }
+  return total;
+}
+
+function cartTotalValueString(){
+  return cartTotalNumber().toFixed(2); // PayPal wants "12.34"
+}
+
 function addToCart(productId){
   const cart = loadCart();
   cart[productId] = (cart[productId] || 0) + 1;
   saveCart(cart);
   renderCart();
+  renderPayPalButtons(); // keep PayPal buttons in sync with current total
 }
 
 function removeOne(productId){
   const cart = loadCart();
   if(!cart[productId]) return;
+
   cart[productId] -= 1;
   if(cart[productId] <= 0) delete cart[productId];
+
   saveCart(cart);
   renderCart();
+  renderPayPalButtons();
 }
 
 function renderCart(){
@@ -93,6 +106,7 @@ function renderCart(){
   const cart = loadCart();
 
   const ids = Object.keys(cart);
+
   if(ids.length === 0){
     cartItemsEl.innerHTML = `<p class="muted">No items yet.</p>`;
     cartTotalEl.textContent = "$0.00";
@@ -147,24 +161,55 @@ function renderProducts(){
   });
 }
 
-/* ============ PAYPAL LINK ============ */
-function setupPayPal(){
-  const link = document.getElementById("paypalCheckout");
-  if(!link) return;
+/* ============ PAYPAL SMART BUTTONS ============ */
+function renderPayPalButtons(){
+  const container = document.getElementById("paypal-buttons");
+  if(!container) return;
 
-  if(PAYPAL_CHECKOUT_URL && PAYPAL_CHECKOUT_URL !== "PASTE_YOUR_PAYPAL_LINK_HERE"){
-    link.href = PAYPAL_CHECKOUT_URL;
-  } else {
-    link.href = "#";
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("Paste your PayPal link into script.js (PAYPAL_CHECKOUT_URL).");
-    });
+  // If PayPal SDK didn't load, show a helpful message
+  if(typeof paypal === "undefined" || !paypal.Buttons){
+    container.innerHTML = `<p class="muted">PayPal not loaded. Check your Client ID script line.</p>`;
+    return;
   }
+
+  // Clear container before rendering (important when cart changes)
+  container.innerHTML = "";
+
+  paypal.Buttons({
+    createOrder: function(data, actions){
+      const total = cartTotalValueString();
+      if(total === "0.00"){
+        alert("Your cart is empty.");
+        return;
+      }
+
+      return actions.order.create({
+        purchase_units: [{
+          amount: { value: total }
+        }]
+      });
+    },
+
+    onApprove: function(data, actions){
+      return actions.order.capture().then(function(details){
+        alert("Payment complete. Thanks!");
+
+        // Clear cart after successful payment
+        localStorage.removeItem(CART_KEY);
+        renderCart();
+        renderPayPalButtons();
+      });
+    },
+
+    onError: function(err){
+      console.error(err);
+      alert("PayPal error. Please try again.");
+    }
+  }).render("#paypal-buttons");
 }
 
+/* ============ INIT ============ */
 setupAgeGate();
-setupPayPal();
 renderProducts();
 renderCart();
-
+renderPayPalButtons();
