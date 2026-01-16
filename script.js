@@ -168,6 +168,32 @@ function renderProducts(){
 }
 
 /********************
+ * PAYPAL ITEMS (so PayPal shows what they ordered)
+ ********************/
+function buildPayPalItems(){
+  const cart = loadCart();
+  const all = getAllProducts();
+  const items = [];
+
+  Object.keys(cart).forEach(id => {
+    const qty = cart[id];
+    const product = all.find(p => p.id === id);
+    if(!product) return;
+
+    items.push({
+      name: product.name, // "Product 1", "Product 2", etc.
+      unit_amount: {
+        currency_code: "USD",
+        value: product.price.toFixed(2)
+      },
+      quantity: String(qty)
+    });
+  });
+
+  return items;
+}
+
+/********************
  * PAYPAL SMART BUTTONS (RENDER ONCE)
  ********************/
 function renderPayPalButtons(){
@@ -197,7 +223,18 @@ function renderPayPalButtons(){
           shipping_preference: "GET_FROM_FILE" // ✅ collect shipping address
         },
         purchase_units: [{
-          amount: { value: total }
+          description: "GG Myco Order",
+          amount: {
+            currency_code: "USD",
+            value: total,
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: total
+              }
+            }
+          },
+          items: buildPayPalItems()
         }]
       });
     },
