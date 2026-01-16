@@ -38,7 +38,7 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
 
-        <!-- ✅ PayPal Smart Buttons render here (no redirect until checkout) -->
+        <!-- PayPal Smart Buttons render here -->
         <div id="paypal-buttons"></div>
       </div>
     </div>
@@ -51,7 +51,6 @@
         <span class="brand-title">GG Myco</span>
         <span class="brand-sub">Page 1</span>
       </div>
-      <!-- ❌ NAV REMOVED FROM TOP -->
     </header>
 
     <!-- Full background logo area -->
@@ -62,7 +61,7 @@
       <div class="products" id="products"></div>
     </section>
 
-    <!-- ✅ PAGE SWITCHER MOVED TO BOTTOM -->
+    <!-- Page switcher -->
     <div class="page-switcher">
       <a class="nav-link active" href="index.html">Page 1</a>
       <a class="nav-link" href="page2.html">Page 2</a>
@@ -71,12 +70,10 @@
 
   <script>window.GG_PAGE = 1;</script>
 
-  <!-- ✅ PayPal SDK (LIVE) - must load BEFORE script.js -->
- <script src="https://www.paypal.com/sdk/js?client-id=Aehl_ByoxS1lcnogpTsPowRjd1otw9QLdtnkaTt783cPlI5mSFPLU6s_GFT10gsgJLit5nyV3qDdiujX&currency=USD"></script>
-
+  <!-- PayPal SDK (use your SANDBOX client-id while testing) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=PASTE_YOUR_CLIENT_ID_HERE&currency=USD&intent=capture"></script>
 
   <script src="script.js"></script>
 </body>
 </html>
-
 
