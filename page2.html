@@ -38,9 +38,8 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
 
-        <a class="checkout-btn" id="paypalCheckout" href="#" target="_blank" rel="noopener">
-          Checkout via PayPal
-        </a>
+        <!-- ✅ PayPal Smart Buttons render here (no redirect until checkout) -->
+        <div id="paypal-buttons"></div>
       </div>
     </div>
   </aside>
@@ -69,6 +68,10 @@
   </main>
 
   <script>window.GG_PAGE = 2;</script>
+
+  <!-- ✅ PayPal SDK (LIVE) - must load BEFORE script.js -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AWv8XPMU6bXCTNFKVxjsyNCo-6G0d_97S2j4KXLpKooBe8mZdRM1nqjt7EFdC8hMQfUG9AyzV5uKjRF0&currency=USD"></script>
+
   <script src="script.js"></script>
 </body>
 </html>
