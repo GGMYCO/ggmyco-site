@@ -8,21 +8,6 @@
 </head>
 <body>
 
-  <!-- 21+ Age Gate (Blocks site until YES) -->
-  <div class="age-gate" id="ageGate" aria-hidden="true">
-    <div class="age-card" role="dialog" aria-modal="true" aria-label="Age verification">
-      <h2>21+ Only</h2>
-      <p>You must be 21 or older to enter this site.</p>
-
-      <div class="age-actions">
-        <button class="btn" id="ageYes" type="button">Yes, I am 21+</button>
-        <button class="btn btn-ghost" id="ageNo" type="button">No</button>
-      </div>
-
-      <small class="age-note">Click “Yes” to continue.</small>
-    </div>
-  </div>
-
   <!-- Cart Sidebar -->
   <aside class="cart" aria-label="Cart">
     <div class="cart-inner">
@@ -38,29 +23,25 @@
           <strong id="cartTotal">$0.00</strong>
         </div>
 
-        <!-- ✅ PayPal Smart Buttons render here (no redirect until checkout) -->
         <div id="paypal-buttons"></div>
       </div>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="page">
     <header class="topbar">
       <div class="brand">
         <span class="brand-title">GG Myco</span>
         <span class="brand-sub">Page 2</span>
       </div>
-      <!-- ❌ NAV REMOVED FROM TOP -->
     </header>
 
     <section class="hero" aria-label="Logo background"></section>
 
     <section class="products-wrap" aria-label="Products">
-      <div class="products page2-grid" id="products"></div>
+      <div class="products" id="products"></div>
     </section>
 
-    <!-- ✅ PAGE SWITCHER MOVED TO BOTTOM -->
     <div class="page-switcher">
       <a class="nav-link" href="index.html">Page 1</a>
       <a class="nav-link active" href="page2.html">Page 2</a>
@@ -69,11 +50,7 @@
 
   <script>window.GG_PAGE = 2;</script>
 
-  <!-- ✅ PayPal SDK (LIVE) - must load BEFORE script.js -->
-<script src="https://www.paypal.com/sdk/js?client-id=Aehl_ByoxS1lcnogpTsPowRjd1otw9QLdtnkaTt783cPlI5mSFPLU6s_GFT10gsgJLit5nyV3qDdiujX&currency=USD"></script>
-
-
+  <script src="https://www.paypal.com/sdk/js?client-id=PASTE_YOUR_CLIENT_ID_HERE&currency=USD&intent=capture"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
