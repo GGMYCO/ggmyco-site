@@ -175,7 +175,7 @@ function renderCart(){
 }
 
 /********************
- * PRODUCTS RENDER (WITH STRAIN DROPDOWN WHERE APPLICABLE)
+ * PRODUCTS RENDER (WITH STRAIN DROPDOWN + IMAGE SUPPORT)
  ********************/
 function renderProducts(){
   const productsEl = document.getElementById("products");
@@ -192,6 +192,7 @@ function renderProducts(){
     const hasStrains = Array.isArray(p.strains) && p.strains.length > 0;
 
     card.innerHTML = `
+      ${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-img">` : ""}
       <h3>${p.name}</h3>
       <div class="price">${money(p.price)}</div>
 
@@ -229,6 +230,7 @@ function renderProducts(){
     productsEl.appendChild(card);
   });
 }
+
 
 /********************
  * PAYPAL ITEMS (so PayPal shows what they ordered)
