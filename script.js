@@ -2,8 +2,8 @@
  * PRODUCTS
  ********************/
 const PRODUCTS_PAGE_1 = [
-  { id: "p1-1", name: "Aio Kt 5lb", price: 62.00 },
-  { id: "p1-2", name: "Product 2", price: 30.00 },
+  { id: "p1-1", name: "AIO Kit 5lb", price: 62.00 },
+  { id: "p1-2", name: "AIO Kit 3LB", price: 50.00 },
   { id: "p1-3", name: "Product 3", price: 22.00 },
   { id: "p1-4", name: "Product 4", price: 28.00 },
 ];
