@@ -1,9 +1,20 @@
 /********************
  * PRODUCTS
  ********************/
+const STRAINS = [
+  "Golden Teacher",
+  "B+",
+  "Hillbilly",
+  "Jedi Mind F*ck",
+  "Albino A+",
+  "Blue Meanie (Cube)",
+  "APE",
+  "Tidal Wave"
+];
+
 const PRODUCTS_PAGE_1 = [
-  { id: "p1-1", name: "AIO Kit 5lb", price: 62.00 },
-  { id: "p1-2", name: "AIO Kit 3LB", price: 50.00 },
+  { id: "p1-1", name: "AIO Kit 5lb", price: 62.00, strains: STRAINS },
+  { id: "p1-2", name: "AIO Kit 3LB", price: 50.00, strains: STRAINS },
   { id: "p1-3", name: "Product 3", price: 22.00 },
   { id: "p1-4", name: "Product 4", price: 28.00 },
 ];
@@ -55,7 +66,7 @@ function setupAgeGate(){
 }
 
 /********************
- * CART (PERSISTS BETWEEN PAGES)
+ * CART (PERSISTS BETWEEN PAGES) + VARIANTS (STRAINS)
  ********************/
 const CART_KEY = "gg_cart_v1";
 
@@ -68,13 +79,25 @@ function saveCart(cart){
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
+// Build a stable key per product + strain
+function cartKey(productId, strain){
+  return strain ? `${productId}__${strain}` : productId;
+}
+
+function parseCartKey(key){
+  const idx = key.indexOf("__");
+  if(idx === -1) return { id: key, strain: null };
+  return { id: key.slice(0, idx), strain: key.slice(idx + 2) };
+}
+
 function cartTotalNumber(){
   const all = getAllProducts();
   const cart = loadCart();
   let total = 0;
 
-  for(const id of Object.keys(cart)){
-    const qty = cart[id];
+  for(const key of Object.keys(cart)){
+    const qty = cart[key];
+    const { id } = parseCartKey(key);
     const product = all.find(p => p.id === id);
     if(product) total += product.price * qty;
   }
@@ -85,19 +108,20 @@ function cartTotalValueString(){
   return cartTotalNumber().toFixed(2);
 }
 
-function addToCart(productId){
+function addToCart(productId, strain=null){
   const cart = loadCart();
-  cart[productId] = (cart[productId] || 0) + 1;
+  const key = cartKey(productId, strain);
+  cart[key] = (cart[key] || 0) + 1;
   saveCart(cart);
   renderCart();
 }
 
-function removeOne(productId){
+function removeOne(key){
   const cart = loadCart();
-  if(!cart[productId]) return;
+  if(!cart[key]) return;
 
-  cart[productId] -= 1;
-  if(cart[productId] <= 0) delete cart[productId];
+  cart[key] -= 1;
+  if(cart[key] <= 0) delete cart[key];
 
   saveCart(cart);
   renderCart();
@@ -109,9 +133,11 @@ function renderCart(){
   const all = getAllProducts();
   const cart = loadCart();
 
-  const ids = Object.keys(cart);
+  const keys = Object.keys(cart);
 
-  if(ids.length === 0){
+  if(!cartItemsEl || !cartTotalEl) return;
+
+  if(keys.length === 0){
     cartItemsEl.innerHTML = `<p class="muted">No items yet.</p>`;
     cartTotalEl.textContent = "$0.00";
     return;
@@ -120,25 +146,28 @@ function renderCart(){
   let total = 0;
   cartItemsEl.innerHTML = "";
 
-  ids.forEach(id => {
-    const qty = cart[id];
+  keys.forEach(key => {
+    const qty = cart[key];
+    const { id, strain } = parseCartKey(key);
     const product = all.find(p => p.id === id);
     if(!product) return;
 
     total += product.price * qty;
 
+    const displayName = strain ? `${product.name} — ${strain}` : product.name;
+
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
       <div class="row">
-        <strong>${product.name}</strong>
+        <strong>${displayName}</strong>
         <strong>${money(product.price * qty)}</strong>
       </div>
       <small>Qty: ${qty}</small>
       <button type="button" class="remove-btn">Remove 1</button>
     `;
 
-    div.querySelector("button").addEventListener("click", () => removeOne(product.id));
+    div.querySelector("button").addEventListener("click", () => removeOne(key));
     cartItemsEl.appendChild(div);
   });
 
@@ -146,23 +175,57 @@ function renderCart(){
 }
 
 /********************
- * PRODUCTS RENDER
+ * PRODUCTS RENDER (WITH STRAIN DROPDOWN WHERE APPLICABLE)
  ********************/
 function renderProducts(){
   const productsEl = document.getElementById("products");
   const page = window.GG_PAGE || 1;
   const list = page === 2 ? PRODUCTS_PAGE_2 : PRODUCTS_PAGE_1;
 
+  if(!productsEl) return;
+
   productsEl.innerHTML = "";
   list.forEach(p => {
     const card = document.createElement("div");
     card.className = "product";
+
+    const hasStrains = Array.isArray(p.strains) && p.strains.length > 0;
+
     card.innerHTML = `
       <h3>${p.name}</h3>
       <div class="price">${money(p.price)}</div>
+
+      ${
+        hasStrains
+          ? `
+            <label class="variant-label" for="strain-${p.id}">Choose strain</label>
+            <select class="variant-select" id="strain-${p.id}">
+              <option value="" selected disabled>Select a strain...</option>
+              ${p.strains.map(s => `<option value="${s}">${s}</option>`).join("")}
+            </select>
+          `
+          : ""
+      }
+
       <button class="add-btn" type="button">Add to Cart</button>
     `;
-    card.querySelector("button").addEventListener("click", () => addToCart(p.id));
+
+    card.querySelector("button").addEventListener("click", () => {
+      if(hasStrains){
+        const select = card.querySelector(`#strain-${p.id}`);
+        const strain = select?.value || "";
+
+        if(!strain){
+          alert("Please select a strain before adding this kit to your cart.");
+          select?.focus();
+          return;
+        }
+        addToCart(p.id, strain);
+      } else {
+        addToCart(p.id);
+      }
+    });
+
     productsEl.appendChild(card);
   });
 }
@@ -175,13 +238,16 @@ function buildPayPalItems(){
   const all = getAllProducts();
   const items = [];
 
-  Object.keys(cart).forEach(id => {
-    const qty = cart[id];
+  Object.keys(cart).forEach(key => {
+    const qty = cart[key];
+    const { id, strain } = parseCartKey(key);
     const product = all.find(p => p.id === id);
     if(!product) return;
 
+    const displayName = strain ? `${product.name} — ${strain}` : product.name;
+
     items.push({
-      name: product.name, // "Product 1", "Product 2", etc.
+      name: displayName,
       unit_amount: {
         currency_code: "USD",
         value: product.price.toFixed(2)
