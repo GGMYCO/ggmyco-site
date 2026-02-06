@@ -24,6 +24,7 @@ const PRODUCTS_PAGE_1 = [
 { id: "agar-1",  name: "90MM Agar Plates (1 pack)",  price: 3.00,  hidden: true },
 { id: "agar-5",  name: "90MM Agar Plates (5 pack)",  price: 10.00, hidden: true },
 { id: "agar-10", name: "90MM Agar Plates (10 pack)", price: 18.00, hidden: true },
+   { id: "p1-6", name: "5Pc Mystery Bundle", price: 55.00 },
 
 ];
 
