@@ -21,7 +21,6 @@ const PRODUCTS_PAGE_1 = [
 { id: "p1-5", name: "90MM Agar Plates", price: 0.00, isAgarDisplay: true },
 
 // Hidden agar bundle products (added to cart)
-{ id: "agar-1",  name: "90MM Agar Plates (1 pack)",  price: 3.00,  hidden: true },
 { id: "agar-5",  name: "90MM Agar Plates (5 pack)",  price: 10.00, hidden: true },
 { id: "agar-10", name: "90MM Agar Plates (10 pack)", price: 18.00, hidden: true },
    { id: "p1-6", name: "5Pc Mystery Bundle", price: 55.00, image: "images/mystery-bundle.jpg" }
