@@ -215,7 +215,6 @@ function renderProducts(){
         isAgarDisplay ? `
           <label class="variant-label" for="agar-pack">Pack size</label>
           <select class="variant-select" id="agar-pack">
-            <option value="agar-1">1 plate — $3</option>
             <option value="agar-5">5 plates — $10</option>
             <option value="agar-10">10 plates — $18</option>
           </select>
