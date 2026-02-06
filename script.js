@@ -183,7 +183,7 @@ function renderCart(){
 }
 
 /********************
- * PRODUCTS RENDER (WITH STRAIN DROPDOWN + IMAGE SUPPORT)
+ * PRODUCTS RENDER (STRAINS + IMAGES + AGAR PACK DROPDOWN)
  ********************/
 function renderProducts(){
   const productsEl = document.getElementById("products");
@@ -194,32 +194,56 @@ function renderProducts(){
 
   productsEl.innerHTML = "";
   list.forEach(p => {
+    // Hide hidden products from the grid
+    if(p.hidden) return;
+
     const card = document.createElement("div");
     card.className = "product";
 
     const hasStrains = Array.isArray(p.strains) && p.strains.length > 0;
+    const isAgarDisplay = p.isAgarDisplay === true;
 
     card.innerHTML = `
       ${p.image ? `<img src="${p.image}" alt="${p.name}" class="product-img">` : ""}
       <h3>${p.name}</h3>
-      <div class="price">${money(p.price)}</div>
+
+      <div class="price">
+        ${isAgarDisplay ? "Select a pack size" : money(p.price)}
+      </div>
 
       ${
-        hasStrains
-          ? `
-            <label class="variant-label" for="strain-${p.id}">Choose strain</label>
-            <select class="variant-select" id="strain-${p.id}">
-              <option value="" selected disabled>Select a strain...</option>
-              ${p.strains.map(s => `<option value="${s}">${s}</option>`).join("")}
-            </select>
-          `
-          : ""
+        isAgarDisplay ? `
+          <label class="variant-label" for="agar-pack">Pack size</label>
+          <select class="variant-select" id="agar-pack">
+            <option value="agar-1">1 plate — $3</option>
+            <option value="agar-5">5 plates — $10</option>
+            <option value="agar-10">10 plates — $18</option>
+          </select>
+        ` : ""
+      }
+
+      ${
+        hasStrains ? `
+          <label class="variant-label" for="strain-${p.id}">Choose strain</label>
+          <select class="variant-select" id="strain-${p.id}">
+            <option value="" selected disabled>Select a strain...</option>
+            ${p.strains.map(s => `<option value="${s}">${s}</option>`).join("")}
+          </select>
+        ` : ""
       }
 
       <button class="add-btn" type="button">Add to Cart</button>
     `;
 
     card.querySelector("button").addEventListener("click", () => {
+      // Agar display card adds the selected hidden bundle
+      if(isAgarDisplay){
+        const selectedId = card.querySelector("#agar-pack").value;
+        addToCart(selectedId);
+        return;
+      }
+
+      // Strain products
       if(hasStrains){
         const select = card.querySelector(`#strain-${p.id}`);
         const strain = select?.value || "";
@@ -230,9 +254,11 @@ function renderProducts(){
           return;
         }
         addToCart(p.id, strain);
-      } else {
-        addToCart(p.id);
+        return;
       }
+
+      // Normal products
+      addToCart(p.id);
     });
 
     productsEl.appendChild(card);
