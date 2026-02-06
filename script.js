@@ -26,8 +26,6 @@ const PRODUCTS_PAGE_1 = [
 { id: "p1-6", name: "5Pc Mystery Bundle", price: 55.00, image: "images/mystery-bundle.jpg" },
 { id: "p1-7", name: "LC Syringe", price: 20.00, image: "images/lc-syringe.jpg" },
 
-
-
 ];
 
 const PRODUCTS_PAGE_2 = [
