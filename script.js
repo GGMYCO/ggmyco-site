@@ -17,7 +17,14 @@ const PRODUCTS_PAGE_1 = [
   { id: "p1-2", name: "AIO Kit 3LB", price: 50.00, strains: STRAINS, image: "images/aio-3lb.jpg" },
   { id: "p1-3", name: "3LB Milo Grain bag", price: 28.00 },
   { id: "p1-4", name: "3LB Millet Grain bag", price: 28.00 },
-  { id: "p1-5", name: "90MM Agar Plates", price: 3.00 },
+  // Agar display card (shows on the page)
+{ id: "p1-5", name: "90MM Agar Plates", price: 0.00, isAgarDisplay: true },
+
+// Hidden agar bundle products (added to cart)
+{ id: "agar-1",  name: "90MM Agar Plates (1 pack)",  price: 3.00,  hidden: true },
+{ id: "agar-5",  name: "90MM Agar Plates (5 pack)",  price: 10.00, hidden: true },
+{ id: "agar-10", name: "90MM Agar Plates (10 pack)", price: 18.00, hidden: true },
+
 ];
 
 const PRODUCTS_PAGE_2 = [
