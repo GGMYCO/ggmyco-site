@@ -16,7 +16,7 @@ const PRODUCTS_PAGE_1 = [
   { id: "p1-1", name: "AIO Kit 5lb", price: 62.00, strains: STRAINS },
   { id: "p1-2", name: "AIO Kit 3LB", price: 50.00, strains: STRAINS, image: "images/aio-3lb.jpg" },
   { id: "p1-3", name: "3LB Milo Grain bag", price: 28.00 },
-  { id: "p1-4", name: "3LB Millet Grain bag", price: 28.00, image: "images/millet.jpg" },
+  { id: "p1-4", name: "3LB Millet Grain bag", price: 28.00, image: "images/millet.jpg.png" },
   // Agar display card (shows on the page)
 { id: "p1-5", name: "90MM Agar Plates", price: 0.00, isAgarDisplay: true },
 
